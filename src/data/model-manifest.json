@@ -1,0 +1,111 @@
+{
+  "hostedModels": [
+    {
+      "modelId": "openai-gpt-5",
+      "provider": "OpenAI",
+      "modelName": "GPT-5",
+      "pricingSourceUrl": "https://developers.openai.com/api/docs/models/gpt-5",
+      "benchmarkSourceUrl": "https://www.swebench.com/",
+      "benchmarkLabel": "OpenHands + GPT-5",
+      "pricingSelector": {
+        "provider": "openai-model-page",
+        "modelPageUrl": "https://developers.openai.com/api/docs/models/gpt-5"
+      },
+      "benchmarkSelector": {
+        "resultName": "OpenHands + GPT-5"
+      }
+    },
+    {
+      "modelId": "openai-gpt-4o",
+      "provider": "OpenAI",
+      "modelName": "GPT-4o",
+      "pricingSourceUrl": "https://developers.openai.com/api/docs/models/gpt-4o",
+      "benchmarkSourceUrl": "https://www.swebench.com/",
+      "benchmarkLabel": "Agentless-1.5 + GPT 4o (2024-05-13)",
+      "pricingSelector": {
+        "provider": "openai-model-page",
+        "modelPageUrl": "https://developers.openai.com/api/docs/models/gpt-4o"
+      },
+      "benchmarkSelector": {
+        "resultName": "Agentless-1.5 + GPT 4o (2024-05-13)"
+      }
+    },
+    {
+      "modelId": "anthropic-claude-sonnet-4-5",
+      "provider": "Anthropic",
+      "modelName": "Claude Sonnet 4.5",
+      "pricingSourceUrl": "https://docs.anthropic.com/en/docs/about-claude/pricing",
+      "benchmarkSourceUrl": "https://www.swebench.com/",
+      "benchmarkLabel": "Sonar Foundation Agent + Claude 4.5 Sonnet",
+      "pricingSelector": {
+        "provider": "anthropic-pricing-table",
+        "rowLabel": "Claude Sonnet 4.5"
+      },
+      "benchmarkSelector": {
+        "resultName": "Sonar Foundation Agent + Claude 4.5 Sonnet"
+      }
+    },
+    {
+      "modelId": "anthropic-claude-opus-4-5",
+      "provider": "Anthropic",
+      "modelName": "Claude Opus 4.5",
+      "pricingSourceUrl": "https://docs.anthropic.com/en/docs/about-claude/pricing",
+      "benchmarkSourceUrl": "https://www.swebench.com/",
+      "benchmarkLabel": "mini-SWE-agent + Claude 4.5 Opus (high reasoning)",
+      "pricingSelector": {
+        "provider": "anthropic-pricing-table",
+        "rowLabel": "Claude Opus 4.5"
+      },
+      "benchmarkSelector": {
+        "resultName": "mini-SWE-agent + Claude 4.5 Opus (high reasoning)"
+      }
+    }
+  ],
+  "localModels": [
+    {
+      "modelId": "qwen3-coder-30b-a3b-instruct",
+      "modelName": "Qwen3-Coder-30B-A3B-Instruct",
+      "quantization": "Q4_K_M GGUF",
+      "minTolerableHardware": "Used RTX 3090 24GB tower",
+      "hardwareCostUsd": 1450,
+      "estimatedTokensPerSecond": 22,
+      "hardwareSourceUrl": "https://www.nvidia.com/en-us/geforce/graphics-cards/30-series/rtx-3090/",
+      "benchmarkSourceUrl": "https://www.swebench.com/",
+      "benchmarkLabel": "EntroPO + R2E + Qwen3-Coder-30B-A3B-Instruct",
+      "notes": "Cost is a curated single-box estimate for a used 3090 workstation with 64 GB system RAM. 24 GB VRAM is the floor for a usable setup here.",
+      "benchmarkSelector": {
+        "resultName": "EntroPO + R2E + Qwen3-Coder-30B-A3B-Instruct"
+      }
+    },
+    {
+      "modelId": "qwen2-5-coder-32b-instruct",
+      "modelName": "Qwen2.5-Coder-32B-Instruct",
+      "quantization": "Q4_K_M GGUF",
+      "minTolerableHardware": "Used RTX 3090 24GB tower",
+      "hardwareCostUsd": 1450,
+      "estimatedTokensPerSecond": 16,
+      "hardwareSourceUrl": "https://www.nvidia.com/en-us/geforce/graphics-cards/30-series/rtx-3090/",
+      "benchmarkSourceUrl": "https://www.swebench.com/",
+      "benchmarkLabel": "Skywork-SWE-32B + TTS(Bo8)",
+      "notes": "This score comes from the Skywork-SWE-32B system submission tagged with Qwen2.5-Coder-32B-Instruct rather than a raw base-model run.",
+      "benchmarkSelector": {
+        "resultName": "Skywork-SWE-32B + TTS(Bo8)"
+      }
+    },
+    {
+      "modelId": "devstral-small-2505",
+      "modelName": "Devstral-Small-2505",
+      "quantization": "Q4_K_M GGUF",
+      "minTolerableHardware": "Used RTX 3090 24GB tower",
+      "hardwareCostUsd": 1450,
+      "estimatedTokensPerSecond": 18,
+      "hardwareSourceUrl": "https://www.nvidia.com/en-us/geforce/graphics-cards/30-series/rtx-3090/",
+      "benchmarkSourceUrl": "https://www.swebench.com/",
+      "benchmarkLabel": "OpenHands + DevStral Small 2505",
+      "notes": "A 3090 box is the practical minimum if you want coding-speed interactivity without spilling heavily into CPU RAM.",
+      "benchmarkSelector": {
+        "resultName": "OpenHands + DevStral Small 2505"
+      }
+    }
+  ]
+}

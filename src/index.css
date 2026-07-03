@@ -1,0 +1,50 @@
+:root {
+  --surface: #f7f6f0;
+  --background: #ece7dd;
+  --background-edge: #d7d1c7;
+  --text-strong: #11252c;
+  --text-base: #314850;
+  --text-soft: #60737b;
+  --text-muted: #6b7c83;
+  --accent: #13736b;
+  --accent-warm: #d97706;
+  --border: rgba(17, 37, 44, 0.12);
+  --border-strong: rgba(17, 37, 44, 0.22);
+  --heading: 'Space Grotesk', 'Avenir Next', 'Trebuchet MS', sans-serif;
+  --sans: 'IBM Plex Sans', 'Segoe UI', sans-serif;
+  font-family: var(--sans);
+  line-height: 1.45;
+  font-weight: 400;
+  color: var(--text-base);
+  background:
+    radial-gradient(circle at top left, rgba(19, 115, 107, 0.12), transparent 28%),
+    linear-gradient(135deg, var(--background), var(--background-edge));
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button {
+  letter-spacing: 0;
+}

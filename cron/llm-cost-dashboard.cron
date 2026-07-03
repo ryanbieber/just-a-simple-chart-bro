@@ -1,0 +1,2 @@
+# Refresh the shipped dataset every Monday at 08:30 local time.
+30 8 * * 1 cd /path/to/2026-07-03-ok-now-lets-plan-out-a && /usr/bin/env npm install && /usr/bin/env npm run data:update
