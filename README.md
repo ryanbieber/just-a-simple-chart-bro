@@ -34,3 +34,5 @@ React + Vite dashboard for comparing coding-focused hosted and local LLM economi
 The repo now includes `.github/workflows/deploy-pages.yml`, which builds and deploys automatically on pushes to `main`.
 
 The build also writes `dist/404.html` from `dist/index.html` so GitHub Pages serves the app correctly for direct deep links.
+
+Current published target: `https://ryanbieber.github.io/just-a-simple-chart-bro/`
