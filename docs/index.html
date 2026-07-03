@@ -11,15 +11,9 @@
         window.location.replace(`${window.location.pathname.replace(/\/$/, '')}/docs/`)
       }
     </script>
+    <script type="module" crossorigin src="/just-a-simple-chart-bro/assets/index-DF2Eo8BA.js"></script>
   </head>
   <body>
     <div id="root"></div>
-    <script type="module">
-      const isGitHubPages = window.location.hostname.endsWith('github.io')
-      const isDocsPath = /\/docs\/?$/.test(window.location.pathname)
-      if (!isGitHubPages || isDocsPath) {
-        import('/src/main.tsx')
-      }
-    </script>
   </body>
 </html>
