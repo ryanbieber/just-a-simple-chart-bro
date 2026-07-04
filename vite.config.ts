@@ -7,7 +7,7 @@ const packageJson = JSON.parse(
 )
 
 export default defineConfig(({ command }) => ({
-  base: command === 'build' ? `/${packageJson.name}/` : '/',
+  base: command === 'build' ? `/${packageJson.name}/docs/` : '/',
   plugins: [react()],
   test: {
     environment: 'jsdom',

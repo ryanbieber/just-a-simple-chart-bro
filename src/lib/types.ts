@@ -19,7 +19,7 @@ export type LocalModel = {
   quantization: string
   minTolerableHardware: string
   hardwareCostUsd: number
-  estimatedTokensPerSecond: number
+  estimatedTokensPerSecond: number | null
   sweBenchVerifiedPct: number | null
   hardwareSourceUrl: string
   benchmarkSourceUrl: string
