@@ -4,22 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>just-a-simple-chart-bro</title>
-    <script>
-      const isGitHubPages = window.location.hostname.endsWith('github.io')
-      const isDocsPath = /\/docs\/?$/.test(window.location.pathname)
-      if (isGitHubPages && !isDocsPath) {
-        window.location.replace(`${window.location.pathname.replace(/\/$/, '')}/docs/`)
-      }
-    </script>
   </head>
   <body>
     <div id="root"></div>
     <script type="module">
-      const isGitHubPages = window.location.hostname.endsWith('github.io')
-      const isDocsPath = /\/docs\/?$/.test(window.location.pathname)
-      if (!isGitHubPages || isDocsPath) {
-        import('/src/main.tsx')
-      }
+      import('/src/main.tsx')
     </script>
   </body>
 </html>
