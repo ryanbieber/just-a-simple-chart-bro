@@ -13,6 +13,7 @@ const fixture: DashboardData = {
       inputUsdPerM: 1,
       outputUsdPerM: 3,
       cachedInputUsdPerM: 0.1,
+      estimatedTokensPerSecond: 50,
       sweBenchVerifiedPct: 70,
       pricingSourceUrl: 'https://example.com/pricing',
       benchmarkSourceUrl: 'https://example.com/benchmark',
@@ -26,6 +27,7 @@ const fixture: DashboardData = {
       inputUsdPerM: 2,
       outputUsdPerM: 6,
       cachedInputUsdPerM: null,
+      estimatedTokensPerSecond: null,
       sweBenchVerifiedPct: null,
       pricingSourceUrl: 'https://example.com/pricing',
       benchmarkSourceUrl: 'https://example.com/benchmark',
@@ -40,8 +42,8 @@ const fixture: DashboardData = {
       quantization: 'Q4',
       minTolerableHardware: 'Used RTX 3090 tower',
       hardwareCostUsd: 1200,
-      estimatedTokensPerSecond: 18,
-      sweBenchVerifiedPct: null,
+      estimatedTokensPerSecond: null,
+      sweBenchVerifiedPct: 55,
       hardwareSourceUrl: 'https://example.com/hardware',
       benchmarkSourceUrl: 'https://example.com/benchmark',
       benchmarkLabel: 'Missing benchmark',
@@ -52,18 +54,18 @@ const fixture: DashboardData = {
 }
 
 describe('App', () => {
-  it('shows missing SWE labels instead of forcing normalization', () => {
+  it('shows the simplified plot header', () => {
     render(<App data={fixture} />)
-    expect(screen.getAllByText('No direct SWE score').length).toBeGreaterThan(0)
+    expect(screen.getByText('Cheaper and smarter is up-left')).toBeInTheDocument()
   })
 
-  it('renders the local hardware notes table', () => {
+  it('renders the quick picks table with the local hardware target', () => {
     render(<App data={fixture} />)
-    expect(screen.getAllByText('Used RTX 3090 tower')).toHaveLength(2)
+    expect(screen.getByText('Used RTX 3090 tower')).toBeInTheDocument()
   })
 
-  it('keeps unusable break-even output out of the UI when baseline exists', () => {
+  it('shows an unavailable speed marker when a model is missing tok/s', () => {
     render(<App data={fixture} />)
-    expect(screen.getByText(/M\/mo/)).toBeInTheDocument()
+    expect(screen.getByText('N/A')).toBeInTheDocument()
   })
 })

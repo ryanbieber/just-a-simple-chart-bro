@@ -3,18 +3,18 @@ import * as cheerio from 'cheerio'
 
 const manifestPath = new URL('../src/data/model-manifest.json', import.meta.url)
 const dashboardDataPath = new URL('../src/data/dashboard-data.json', import.meta.url)
-const sweBenchUrl = 'https://www.swebench.com/'
+const llmStatsBenchmarkUrl = 'https://llm-stats.com/benchmarks/swe-bench-pro'
 const anthropicPricingUrl = 'https://docs.anthropic.com/en/docs/about-claude/pricing'
 
 const manifest = JSON.parse(await readFile(manifestPath, 'utf8'))
 const previous = JSON.parse(await readFile(dashboardDataPath, 'utf8'))
 
-const sweBenchResults = await fetchSweBenchVerified()
+const benchmarkModels = await fetchLlmStatsBenchmarkModels()
 const anthropicPriceMap = await fetchAnthropicPrices()
 
 const hostedModels = []
 for (const model of manifest.hostedModels) {
-  const benchmark = findBenchmark(model.benchmarkSelector.resultName, sweBenchResults)
+  const benchmark = findBenchmark(model.benchmarkSelector?.modelId, benchmarkModels)
   const pricing = await fetchHostedPricing(model.pricingSelector, anthropicPriceMap)
   const existing = previous.hostedModels.find((entry) => entry.modelId === model.modelId)
 
@@ -25,21 +25,26 @@ for (const model of manifest.hostedModels) {
     inputUsdPerM: pricing?.inputUsdPerM ?? existing?.inputUsdPerM ?? null,
     outputUsdPerM: pricing?.outputUsdPerM ?? existing?.outputUsdPerM ?? null,
     cachedInputUsdPerM: pricing?.cachedInputUsdPerM ?? existing?.cachedInputUsdPerM ?? null,
-    sweBenchVerifiedPct: benchmark?.resolved ?? existing?.sweBenchVerifiedPct ?? null,
+    estimatedTokensPerSecond:
+      model.estimatedTokensPerSecond ?? existing?.estimatedTokensPerSecond ?? null,
+    sweBenchVerifiedPct:
+      benchmark?.score !== undefined ? roundPct(benchmark.score * 100) : existing?.sweBenchVerifiedPct ?? null,
     pricingSourceUrl: model.pricingSourceUrl,
     benchmarkSourceUrl: model.benchmarkSourceUrl,
-    benchmarkLabel: model.benchmarkLabel,
+    benchmarkLabel: benchmark
+      ? `${benchmark.model_name} on LLM Stats SWE-Bench Pro`
+      : model.benchmarkLabel,
     lastUpdated: currentDate(),
   })
 }
 
 const localModels = []
 for (const model of manifest.localModels) {
-  const benchmark = findBenchmark(model.benchmarkSelector.resultName, sweBenchResults)
+  const benchmark = findBenchmark(model.benchmarkSelector?.modelId, benchmarkModels)
   const existing = previous.localModels.find((entry) => entry.modelId === model.modelId)
 
-  if (!benchmark) {
-    console.warn(`Benchmark refresh warning: "${model.benchmarkSelector.resultName}" not found.`)
+  if (model.benchmarkSelector?.modelId && !benchmark) {
+    console.warn(`Benchmark refresh warning: "${model.benchmarkSelector.modelId}" not found.`)
   }
 
   localModels.push({
@@ -50,10 +55,13 @@ for (const model of manifest.localModels) {
     hardwareCostUsd: model.hardwareCostUsd ?? existing?.hardwareCostUsd ?? null,
     estimatedTokensPerSecond:
       model.estimatedTokensPerSecond ?? existing?.estimatedTokensPerSecond ?? null,
-    sweBenchVerifiedPct: benchmark?.resolved ?? existing?.sweBenchVerifiedPct ?? null,
+    sweBenchVerifiedPct:
+      benchmark?.score !== undefined ? roundPct(benchmark.score * 100) : existing?.sweBenchVerifiedPct ?? null,
     hardwareSourceUrl: model.hardwareSourceUrl,
     benchmarkSourceUrl: model.benchmarkSourceUrl,
-    benchmarkLabel: model.benchmarkLabel,
+    benchmarkLabel: benchmark
+      ? `${benchmark.model_name} on LLM Stats SWE-Bench Pro`
+      : model.benchmarkLabel,
     notes: model.notes,
     lastUpdated: currentDate(),
   })
@@ -69,24 +77,30 @@ const nextData = {
 await writeFile(dashboardDataPath, `${JSON.stringify(nextData, null, 2)}\n`)
 console.log(`Updated dashboard dataset at ${dashboardDataPath.pathname}`)
 
-async function fetchSweBenchVerified() {
-  const html = await fetchText(sweBenchUrl)
-  const match = html.match(
-    /<script type="application\/json" id="leaderboard-data">\s*([\s\S]*?)<\/script>/,
+async function fetchLlmStatsBenchmarkModels() {
+  const html = await fetchText(llmStatsBenchmarkUrl)
+  const marker = 'initialBenchmarkData\\":'
+  const markerIndex = html.indexOf(marker)
+
+  if (markerIndex === -1) {
+    throw new Error('Unable to locate LLM Stats benchmark payload.')
+  }
+
+  const startIndex = html.indexOf('{', markerIndex)
+  const endIndex = findMatchingBrace(html, startIndex)
+
+  const payload = JSON.parse(
+    html
+      .slice(startIndex, endIndex + 1)
+      .replace(/\\"/g, '"')
+      .replace(/\\n/g, '\n')
+      .replace(/\\u003c/g, '<')
+      .replace(/\\u003e/g, '>')
+      .replace(/\\u0026/g, '&')
+      .replace(/\\\//g, '/'),
   )
 
-  if (!match) {
-    throw new Error('Unable to locate SWE-bench leaderboard data payload.')
-  }
-
-  const payload = JSON.parse(match[1])
-  const verified = payload.find((entry) => entry.name === 'Verified')
-
-  if (!verified) {
-    throw new Error('Unable to locate the Verified leaderboard in SWE-bench payload.')
-  }
-
-  return verified.results
+  return payload.models
 }
 
 async function fetchAnthropicPrices() {
@@ -148,8 +162,12 @@ async function fetchHostedPricing(selector, anthropicPriceMap) {
   return null
 }
 
-function findBenchmark(resultName, results) {
-  return results.find((entry) => entry.name === resultName) ?? null
+function findBenchmark(modelId, results) {
+  if (!modelId) {
+    return null
+  }
+
+  return results.find((entry) => entry.model_id === modelId) ?? null
 }
 
 function parseMoney(value) {
@@ -168,4 +186,28 @@ async function fetchText(url) {
 
 function currentDate() {
   return new Date().toISOString().slice(0, 10)
+}
+
+function roundPct(value) {
+  return Math.round(value * 10) / 10
+}
+
+function findMatchingBrace(text, startIndex) {
+  let depth = 0
+
+  for (let index = startIndex; index < text.length; index += 1) {
+    const char = text[index]
+
+    if (char === '{') {
+      depth += 1
+    } else if (char === '}') {
+      depth -= 1
+
+      if (depth === 0) {
+        return index
+      }
+    }
+  }
+
+  throw new Error('Unable to find the end of the LLM Stats benchmark payload.')
 }

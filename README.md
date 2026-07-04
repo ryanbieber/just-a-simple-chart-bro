@@ -14,7 +14,7 @@ React + Vite dashboard for comparing coding-focused hosted and local LLM economi
 ## Data model
 
 - `src/data/model-manifest.json`
-  Curated refresh manifest. Hosted entries define pricing and SWE-bench selectors. Local entries keep manual hardware assumptions plus benchmark selectors.
+  Curated refresh manifest. Hosted entries define pricing and LLM Stats SWE-Bench Pro selectors. Local entries keep manual hardware assumptions plus benchmark selectors.
 - `src/data/dashboard-data.json`
   Generated data shipped to the frontend.
 
@@ -23,7 +23,7 @@ React + Vite dashboard for comparing coding-focused hosted and local LLM economi
 `npm run data:update` will:
 
 - refresh hosted pricing from official OpenAI and Anthropic pages,
-- refresh SWE-bench Verified scores from the official leaderboard payload,
+- refresh LLM Stats SWE-Bench Pro scores from the published leaderboard payload,
 - preserve curated local hardware costs and throughput assumptions,
 - regenerate `src/data/dashboard-data.json`.
 

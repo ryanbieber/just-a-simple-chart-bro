@@ -5,6 +5,7 @@ export type HostedModel = {
   inputUsdPerM: number
   outputUsdPerM: number
   cachedInputUsdPerM: number | null
+  estimatedTokensPerSecond: number | null
   sweBenchVerifiedPct: number | null
   pricingSourceUrl: string
   benchmarkSourceUrl: string
