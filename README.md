@@ -32,6 +32,7 @@ React + Vite dashboard for comparing coding-focused hosted and local LLM economi
 `vite.config.ts` uses the package name as the build base path so the app can be deployed to GitHub Project Pages.
 
 The production site is published from `main/docs`, which contains a checked-in copy of the built Vite output.
+GitHub Pages is configured to serve that `docs/` directory directly.
 
 The build also writes `404.html` from `index.html` so GitHub Pages serves the app correctly for direct deep links.
 
